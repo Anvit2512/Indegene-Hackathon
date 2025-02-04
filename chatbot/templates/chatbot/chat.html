@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Chatbot</title>
+    <script>
+        function sendMessage() {
+            var userMessage = document.getElementById("userMessage").value;
+            fetch("/chatbot/chat/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: "message=" + encodeURIComponent(userMessage)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("chatbox").innerHTML += "<b>You:</b> " + userMessage + "<br>";
+                document.getElementById("chatbox").innerHTML += "<b>AI:</b> " + data.response + "<br><br>";
+                document.getElementById("userMessage").value = "";
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Mental Health AI Chatbot</h1>
+    <div id="chatbox" style="border: 1px solid #000; padding: 10px; width: 400px; height: 300px; overflow-y: auto;"></div>
+    <input type="text" id="userMessage" placeholder="Type your message here">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
